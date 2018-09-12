@@ -1,0 +1,15 @@
+{
+  "name": "boki-n-anene-api",
+  "version": "1.0.0",
+  "description": "Restful api for boki n anene app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "codenert@vs-ssh.visualstudio.com:v3/codenert/Boki n Anene/Boki n Anene Api"
+  },
+  "author": "Kateti Mareko",
+  "license": "UNLICENSED"
+}
