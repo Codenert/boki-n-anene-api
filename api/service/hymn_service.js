@@ -15,3 +15,16 @@ exports.find_hymn_by_number = ( number ) => {
     return HymnModel.findOne( { hymn_number: number } ).exec()
 
 }
+
+/**
+  * Find the hymn that matches the given hymn number input
+  * and return it as a promise
+  * @param { The hymn number to be used to find the hymn with that hymn numbner } hymn_number 
+  */
+ exports.find_hymn_by_word = ( word ) => {
+
+    return HymnModel.find( { $text: { $search: "\"" + word + "\"", $caseSensitive: false } } ).sort(
+        { hymn_number: "asc" }
+    ).exec();
+
+}

@@ -11,3 +11,12 @@ exports.find_hymn_by_number = (req, res) => {
     })
 
 }
+
+exports.find_hymn_by_word = (req, res) => {
+    var word = req.query.search_word
+    hymn_service.find_hymn_by_word(word).then(result => {
+        res.send(result)
+    }).catch(err => {
+        res.send(err)
+    })
+}
