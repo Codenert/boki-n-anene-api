@@ -14,6 +14,10 @@ module.exports = {
 
     urlencode: {
         extended: false
+    },
+
+    token: {
+        expiresIn: '1d'
     }
 
 }

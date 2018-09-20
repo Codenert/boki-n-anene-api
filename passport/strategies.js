@@ -1,6 +1,7 @@
 const LocalStrategy = require('passport-local').Strategy
 const config = require('../config/config')
 const account_service = require('../api/service/account_service')
+const jsonWebToken = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
 module.exports = Strategies = {
@@ -12,16 +13,17 @@ module.exports = Strategies = {
             account_service.find_user(username).then( user => {
                 if (user) {
 
-                    // Hash the password
-                    //bcrypt.hash(password, 10, (err, hash) =>)
                     bcrypt.compare(password, user.password, (err, same) => {
                         if (err) {
-
+                            return done(err)
                         }
                         if (same) {
-                            return done(null, null, {
+
+                            // generate a token
+                            var token = jsonWebToken.sign({ email: user.email, id: user.id}, process.env.JWT_SECRET, config.token);
+                            
+                            return done(null, token, {
                                 statusCode: 200,
-                                message: ''
                             })
                         } else {
                             return done(null, null, {
