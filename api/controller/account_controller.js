@@ -14,3 +14,16 @@ exports.login = (req, res) => {
             }
         })(req, res)
 }
+
+exports.isSignedIn = (req, res, next) => {
+    passport.authenticate('bearer', {session: false}, (err, result, info) => {
+        if (result) {
+            next()
+        } else if (info) {
+            res.status(info.statusCode)
+            res.send(info.message)
+        } else {
+            res.send(err)
+        }
+    })(req, res, next)
+}

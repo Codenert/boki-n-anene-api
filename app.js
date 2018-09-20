@@ -8,7 +8,7 @@ const config = require('./config/config')
 const helmet = require('helmet')
 const cors = require('cors')
 const passport = require('passport')
-const passwort_stratety = require('./passport/strategies')
+const passport_stratety = require('./passport/strategies')
 
 app.use(express.urlencoded(config.urlencode))
 app.use(express.json())
@@ -31,7 +31,8 @@ db.once('open', function() {
  * Configure passport
  */
 app.use(passport.initialize())
-passport.use('local-sigin',passwort_stratety.LocalStrategy)
+passport.use('local-sigin',passport_stratety.LocalStrategy)
+passport.use('bearer', passport_stratety.BearerdStrategy)
 
 /**
  * Routes

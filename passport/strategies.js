@@ -1,4 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy
+const BearerStrategy = require('passport-http-bearer').Strategy
 const config = require('../config/config')
 const account_service = require('../api/service/account_service')
 const jsonWebToken = require('jsonwebtoken')
@@ -45,6 +46,31 @@ module.exports = Strategies = {
 
             
         }
-    )
+    ),
+
+    BearerdStrategy : new BearerStrategy((token, done) => {
+        // verify a token
+        jsonWebToken.verify(token, process.env.JWT_SECRET, (err, decode) => {
+            
+            if (token) {
+                
+                if (err) {
+                    return done(null, null, {
+                        statusCode: 200
+                    })
+                }
+
+                if (decode) {
+                    return done(null, "authenticated")
+                }
+            } else {
+                return done(null, null, {
+                    statusCode: 403
+                })
+            }
+        })
+    })
+
+
 
 }
