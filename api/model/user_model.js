@@ -7,4 +7,4 @@ var UserModel = new mongoose.Schema({
     email: { type: String, required: true }
 })
 
-module.exports = mongoose.model('user', UserModel)
+module.exports = mongoose.model('_User', UserModel)
