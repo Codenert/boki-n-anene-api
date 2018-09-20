@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const hymn_router = require('./api/routes/hymn')
 const secret_router = require('./api/routes/secret')
+const account_router = require('./api/routes/account')
 const mongoose = require('mongoose')
 const config = require('./config/config')
 const helmet = require('helmet')
@@ -9,6 +10,8 @@ const cors = require('cors')
 const passport = require('passport')
 const passwort_stratety = require('./passport/strategies')
 
+app.use(express.urlencoded(config.urlencode))
+app.use(express.json())
 app.use(helmet())
 
 app.use(cors(config.cors))
@@ -28,13 +31,13 @@ db.once('open', function() {
  * Configure passport
  */
 app.use(passport.initialize())
-passport.use(passwort_stratety.LocalStrategy)
+passport.use('local-sigin',passwort_stratety.LocalStrategy)
 
 /**
  * Routes
  */
 app.use('/secret', secret_router)
 app.use('/api/hymns', hymn_router)
-
+app.use('/api/account', account_router)
 
 module.exports = app

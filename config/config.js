@@ -10,6 +10,10 @@ module.exports = {
 
     passport: {
         passReqToCallback: true
+    },
+
+    urlencode: {
+        extended: false
     }
 
 }
