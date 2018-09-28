@@ -7,25 +7,7 @@ const passport = require('passport')
  * @since 28/9/2018
  */
 
-/**
- * This check if the user have a valid token then it will allow further action to be 
- * performed
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- */
-exports.Authorize = (req, res, next) => {
-    passport.authenticate('bearer', {session: false}, (err, result, info) => {
-        if (result) {
-            next()
-        } else if (err) {
-            res.status(401)
-            res.send('unauthorized')
-        }
-    })(req, res, next)
-}
-
-var AuthorizeOptions = {
+const AuthorizeOptions = {
     Roles: String
 }
 
@@ -40,7 +22,7 @@ exports.Authorize = (AuthorizeOptions) => {
     return (req, res, next) => {
         passport.authenticate('bearer', (err, result, info) => {
             if (result) {
-                if (result.role === AuthorizeOptions.Roles) {
+                if (result.role === AuthorizeOptions.Roles || AuthorizeOptions.Roles === "*") {
                     next()
                 } else {
                     res.status(403).send()

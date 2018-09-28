@@ -1,5 +1,4 @@
 const LocalStrategy = require('passport-local').Strategy
-const BearerStrategy = require('passport-http-bearer').Strategy
 const config = require('../../config/config')
 const UserService = require('./user_service')
 const jsonWebToken = require('jsonwebtoken')

@@ -9,7 +9,6 @@ const cors = require('cors')
 const passport = require('passport')
 const account_strategy = require('./api/account/strategies')
 const authorize_strategy = require('./api/middleware/authorization/strategy')
-const roleModel = require('./api/model/role_model')
 
 app.use(express.urlencoded(config.urlencode))
 app.use(express.json())
@@ -35,7 +34,7 @@ app.use(passport.initialize())
 passport.use('account-register', account_strategy.RegisterStrategy)
 passport.use('account-login', account_strategy.LocalStrategy)
 
-passport.use('bearer', authorize_strategy.BearerdStrategy)
+passport.use('bearer', authorize_strategy.BearerStrategy)
 
 /**
  * Routes
