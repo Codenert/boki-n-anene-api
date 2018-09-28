@@ -8,7 +8,7 @@ var hymn_schema = new mongoose.Schema({
    _created_at: { type: Date, default: new Date()},
    _updated_at: Date,
     verse: { type: String, text: true, required: [true, 'Song verses is required']},
-    hymn_number: { type: Number, required: true }
+    hymn_number: { type: Number, required: [true,'Hymn number is required'] }
 })
 
 module.exports = mongoose.model('hymn', hymn_schema)

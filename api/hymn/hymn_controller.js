@@ -1,10 +1,16 @@
 
 const HymnService = require('./hymn_service')
+const Encrypt = require('./encrypt_decrypt').Encrypt
+const Decrypt = require('./encrypt_decrypt').Decrypt
 
 exports.FindHymnByNumber = (req, res) => {
 
     var inputQuery = req.query.hymn_number
-    HymnService.find_hymn_by_number(inputQuery).then(result => {
+    HymnService.FindHymnByNumber(inputQuery).then(result => {
+
+        // decrypt the data
+        result.verse = Decrypt(result.verse)
+
         res.send(result)
     }).catch(err => {
         res.send(err)
@@ -14,9 +20,22 @@ exports.FindHymnByNumber = (req, res) => {
 
 exports.FindHymnByWord = (req, res) => {
     var word = req.query.search_word
-    HymnService.find_hymn_by_word(word).then(result => {
+    HymnService.FindHymnByWord(word).then(result => {
         res.send(result)
     }).catch(err => {
         res.send(err)
+    })
+}
+
+exports.AddHymn = (req, res) => {
+
+    // encrypt data
+
+    HymnService.AddHymn(Encrypt(req.body.verse), req.body.hymn_number).then(result => {
+        if (result) {
+            res.status(201).send(result)
+        }
+    }).catch(err => {
+        res.status(400).send(err)
     })
 }

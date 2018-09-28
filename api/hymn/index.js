@@ -7,8 +7,6 @@ const Authorize = require('../middleware/authorization/authorize').Authorize
 //router.get("/number", api_key_authorizer, HymnController.FindHymnByNumber)
 //router.get("/word", api_key_authorizer, HymnController.FindHymnByWord)
 
-router.post("", Authorize({Roles: "*"}), (req, res) => {
-    res.send("hello from testing")
-})
+router.post("", Authorize({Roles: "*"}), HymnController.AddHymn)
 
 module.exports = router
