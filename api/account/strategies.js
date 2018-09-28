@@ -20,8 +20,6 @@ module.exports = Strategies = {
     RegisterStrategy : new LocalStrategy(
         config.passport,
         (req, username, password, done) => {
-
-            
             bcrypt.hash(password, 10, (err, encrypted) => {
                 
                 if (err) {
@@ -32,10 +30,7 @@ module.exports = Strategies = {
                     UserService.CreateUser(username, encrypted, req.body.email, req.body.role).then(result => {
                         return done(null, result)
                     }).catch(err => {
-                        return done(null, null, {
-                            properties: [username, req.body.email],
-                            err: err
-                        })
+                        return done(err, null)
                     })
                 }
             })
