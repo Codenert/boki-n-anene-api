@@ -10,7 +10,7 @@ var HymnModel = require('../model/hymn_model')
   * and return it as a promise
   * @param { The hymn number to be used to find the hymn with that hymn numbner } hymn_number 
   */
-exports.find_hymn_by_number = ( number ) => {
+exports.FindHymnByNumber = ( number ) => {
 
     return HymnModel.findOne( { hymn_number: number } ).exec()
 
@@ -21,7 +21,7 @@ exports.find_hymn_by_number = ( number ) => {
   * and return it as a promise
   * @param { The hymn number to be used to find the hymn with that hymn numbner } hymn_number 
   */
- exports.find_hymn_by_word = ( word ) => {
+ exports.FindHymnByWord = ( word ) => {
 
     return HymnModel.find( { $text: { $search: "\"" + word + "\"", $caseSensitive: false } } ).sort(
         { hymn_number: "asc" }

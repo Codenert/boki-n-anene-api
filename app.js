@@ -1,14 +1,15 @@
 const express = require('express')
 const app = express()
-const hymn_router = require('./api/routes/hymn')
-const secret_router = require('./api/routes/secret')
-const account_router = require('./api/routes/account')
+const hymn_router = require('./api/hymn')
+const account_router = require('./api/account')
 const mongoose = require('mongoose')
 const config = require('./config/config')
 const helmet = require('helmet')
 const cors = require('cors')
 const passport = require('passport')
-const passport_stratety = require('./passport/strategies')
+const account_strategy = require('./api/account/strategies')
+const authorize_strategy = require('./api/middleware/authorization/strategy')
+const roleModel = require('./api/model/role_model')
 
 app.use(express.urlencoded(config.urlencode))
 app.use(express.json())
@@ -31,13 +32,14 @@ db.once('open', function() {
  * Configure passport
  */
 app.use(passport.initialize())
-passport.use('local-sigin',passport_stratety.LocalStrategy)
-passport.use('bearer', passport_stratety.BearerdStrategy)
+passport.use('account-register', account_strategy.RegisterStrategy)
+passport.use('account-login', account_strategy.LocalStrategy)
+
+passport.use('bearer', authorize_strategy.BearerdStrategy)
 
 /**
  * Routes
  */
-app.use('/secret', secret_router)
 app.use('/api/hymns', hymn_router)
 app.use('/api/account', account_router)
 
