@@ -1,13 +1,20 @@
 const express = require('express')
 const app = express()
-const hymn_router = require('./api/routes/hymn')
-const secret_router = require('./api/routes/secret')
+const hymn_router = require('./api/hymn')
+const account_router = require('./api/account')
 const mongoose = require('mongoose')
 const config = require('./config/config')
 const helmet = require('helmet')
+const cors = require('cors')
+const passport = require('passport')
+const account_strategy = require('./api/account/strategies')
+const authorize_strategy = require('./api/middleware/authorization/strategy')
 
-
+app.use(express.urlencoded(config.urlencode))
+app.use(express.json())
 app.use(helmet())
+
+app.use(cors(config.cors))
 /**
  * Setup mongoose db to connect to this api 
  */
@@ -21,10 +28,18 @@ db.once('open', function() {
 });
 
 /**
+ * Configure passport
+ */
+app.use(passport.initialize())
+passport.use('account-register', account_strategy.RegisterStrategy)
+passport.use('account-login', account_strategy.LocalStrategy)
+
+passport.use('bearer', authorize_strategy.BearerStrategy)
+
+/**
  * Routes
  */
-app.use('/secret', secret_router)
 app.use('/api/hymns', hymn_router)
-
+app.use('/api/account', account_router)
 
 module.exports = app
