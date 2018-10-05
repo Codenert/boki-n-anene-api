@@ -28,3 +28,14 @@ exports.FindHymnByNumber = ( number ) => {
     ).exec();
 
 }
+
+exports.AddHymn = (verse, hymn_number) => {
+
+    return new HymnModel({
+        _id: new mongoose.Types.ObjectId,
+        verse: verse,
+        hymn_number: hymn_number,
+        _updated_at: new Date()
+    }).save()
+
+}

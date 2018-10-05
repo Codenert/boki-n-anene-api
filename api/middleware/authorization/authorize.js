@@ -22,12 +22,18 @@ exports.Authorize = (AuthorizeOptions) => {
     return (req, res, next) => {
         passport.authenticate('bearer', (err, result, info) => {
             if (result) {
+
                 if (result.role === AuthorizeOptions.Roles || AuthorizeOptions.Roles === "*") {
                     next()
                 } else {
                     res.status(403).send()
                 }
             }
+
+            if (err) {
+                res.status(401).end()
+            }
+
         })(req, res, next)
     }
 }

@@ -2,7 +2,7 @@
 
 const passport = require('passport')
 
-exports.RegisterUser = (req, res) => {
+exports.RegisterUser = (req, res, next) => {
     passport.authenticate('account-register', (err, result, info) => {
         if (result) {
             res.status(200).send({
@@ -11,21 +11,11 @@ exports.RegisterUser = (req, res) => {
         }
 
         if (err) {
-
-            // find information about the err
-            if (err.code === 11000) {         // uniqueness failed error
-                var value = err.errmsg.split('"')[1]
-                var temp = err.errmsg.split('$')[1]
-                var property = temp.substring(0,temp.indexOf('_'))
-                res.status(400).send(property + " '" + value + "' is already taken")
-            } else {                          // required error
-                res.status(400).send(err.message)//"Some of the field are required")
-            }
-
+            next(err)
         }
 
         
-    })(req,res)
+    })(req,res, next)
 }
 
 exports.Login = (req, res) => {
