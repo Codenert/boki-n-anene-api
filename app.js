@@ -1,3 +1,5 @@
+'use strict'
+
 const express = require('express')
 const app = express()
 const hymn_router = require('./api/hymn')
