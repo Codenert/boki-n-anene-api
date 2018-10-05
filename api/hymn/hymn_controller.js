@@ -1,19 +1,28 @@
 
 const HymnService = require('./hymn_service')
-const Encrypt = require('./encrypt_decrypt').Encrypt
-const Decrypt = require('./encrypt_decrypt').Decrypt
+const AESEncrypt = require('./encrypt_decrypt').AESEncrypt
+const AESDecrypt = require('./encrypt_decrypt').AESDecrypt
+const EncryptData = require('./encrypt_decrypt').EncryptData
 
 exports.FindHymnByNumber = (req, res) => {
-
     var inputQuery = req.query.hymn_number
     HymnService.FindHymnByNumber(inputQuery).then(result => {
 
-        // decrypt the data
-        result.verse = Decrypt(result.verse)
+        if (result) {
+            try {
+                result.verse = AESDecrypt(result.verse)
+                var data = EncryptData(JSON.stringify(result))
+                res.send(data)
+            } catch (exception) {
+                res.status(500).send()
+            }
+        } else {
+            res.status(404).send()
+        }
 
-        res.send(result)
     }).catch(err => {
-        res.send(err)
+
+        res.status(500).send()
     })
 
 }
@@ -27,15 +36,24 @@ exports.FindHymnByWord = (req, res) => {
     })
 }
 
-exports.AddHymn = (req, res) => {
+exports.AddHymn = (req, res, next) => {
+
+    var cipherText = ""
+    try {
+        cipherText = AESEncrypt(req.body.verse)
+    } catch (exception) {
+        res.status(500).send()
+        return
+    }
 
     // encrypt data
-
-    HymnService.AddHymn(Encrypt(req.body.verse), req.body.hymn_number).then(result => {
+    HymnService.AddHymn(cipherText, req.body.hymn_number).then(result => {
         if (result) {
             res.status(201).send(result)
         }
     }).catch(err => {
-        res.status(400).send(err)
+        console.log(err)
+        err.host = 'hymn'
+        next(err)
     })
 }
