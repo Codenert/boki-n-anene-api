@@ -1,5 +1,10 @@
 const mongoose = require('mongoose')
 
+/**
+ * User model
+ * @author Kateti Mareko
+ * @since 27-08-18
+ */
 var UserModel = new mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId },
     username: { type: String, required: [true, 'Username is required'], unique: true },
@@ -9,4 +14,4 @@ var UserModel = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('User', UserModel)
+module.exports = mongoose.model('_user', UserModel)

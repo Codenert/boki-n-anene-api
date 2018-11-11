@@ -7,6 +7,9 @@ const passport = require('passport')
  * @since 28/9/2018
  */
 
+ /**
+  * Authorize options such as roles
+  */
 const AuthorizeOptions = {
     Roles: String
 }
@@ -24,7 +27,7 @@ exports.Authorize = (AuthorizeOptions) => {
             if (result) {
 
                 if (result.role === AuthorizeOptions.Roles || AuthorizeOptions.Roles === "*") {
-                    next()
+                    next() // When the user is allowed to continue what they requesting to do
                 } else {
                     res.status(403).send()
                 }

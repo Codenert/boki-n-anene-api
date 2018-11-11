@@ -2,6 +2,8 @@
 
 /**
  * Role model
+ * @author Kateti Mareko
+ * @since 27-08-18
  */
 
  const mongoose = require('mongoose')
@@ -11,4 +13,4 @@ var Role_Model = new mongoose.Schema({
     name: { type: String, required: true },
 })
 
-module.exports = mongoose.model('Role', Role_Model)
+module.exports = mongoose.model('_role', Role_Model)

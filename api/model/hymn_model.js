@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 
 /**
  * Hymn schema that represent the hymn
+ * @author Kateti Mareko
+ * @since 27-08-18
  */
 var hymn_schema = new mongoose.Schema({
     _id: { type: mongoose.Schema.Types.ObjectId },
@@ -11,4 +13,4 @@ var hymn_schema = new mongoose.Schema({
     hymn_number: { type: Number, required: [true,'Hymn number is required'], unique: true }
 })
 
-module.exports = mongoose.model('Songs', hymn_schema)
+module.exports = mongoose.model('hymn', hymn_schema)

@@ -1,6 +1,12 @@
 const BearerStrategy = require('passport-http-bearer').Strategy
 const jsonWebToken = require('jsonwebtoken')
 
+/**
+ * Check and verify the user token 
+ * @author Kateti Mareko
+ * @since 28/9/2018
+ */
+
 module.exports = Strategy = {
     /**
      * This strategy verify the token, if the token is valid then it will
