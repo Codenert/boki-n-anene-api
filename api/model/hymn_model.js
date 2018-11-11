@@ -13,4 +13,4 @@ var hymn_schema = new mongoose.Schema({
     hymn_number: { type: Number, required: [true,'Hymn number is required'], unique: true }
 })
 
-module.exports = mongoose.model('Songs', hymn_schema)
+module.exports = mongoose.model('hymn', hymn_schema)
