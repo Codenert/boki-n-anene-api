@@ -15,13 +15,13 @@ const MongoErrorHandler = require('../error/mongo_error').MongoErrorHandler
  * @since 27-08-18
  */
 
-router.get("/word", Authorize({Roles: "admin"}), HymnController.FindHymnByWord)
+router.get("/word", HymnController.FindHymnByWord)
 
 /**
  * GET
  * This endpoint requires the user to be an admin
  */
-router.get("/number", Authorize({Roles: "admin"}), HymnController.FindHymnByNumber)
+router.get("/number", HymnController.FindHymnByNumber)
 
 /**
  * PUT
