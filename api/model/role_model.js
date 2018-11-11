@@ -2,6 +2,8 @@
 
 /**
  * Role model
+ * @author Kateti Mareko
+ * @since 27-08-18
  */
 
  const mongoose = require('mongoose')

@@ -8,6 +8,7 @@ const RoleModel = require('../model/role_model')
 
 /**
  * These are the strategies to be used by the passport
+ * for registering and login a user
  * @author Kateti Mareko
  * @since 27-08-18
  */
@@ -39,13 +40,21 @@ module.exports = Strategies = {
     
     /**
      * This strategy handle authenticating the user. Its done by checking if the user is in the system.
-     * If exist then it will create a signed token with a role type as a payload and then send it to the user
+     * If the user exist then it will create a signed token with a role type as a payload and then send it to the user
      */
     LocalStrategy : new LocalStrategy(
         (username, password, done) => {
 
+            /**
+             * Find the user first
+             */
             UserService.FindUser(username).then( user => {
                 if (user) {
+
+                    /**
+                     * Compare the hashed password stored in the database
+                     * against what the user is providing
+                     */
                     bcrypt.compare(password, user.password, (err, same) => {
                         if (err) {
                             return done(err)
@@ -62,8 +71,6 @@ module.exports = Strategies = {
                                     })
                                 }
                             })
-                            
-                            
                         } else {
                             return done(null, null, {
                                 statusCode: 401,
