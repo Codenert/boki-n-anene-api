@@ -10,6 +10,7 @@ const cors = require('cors')
 const passport = require('passport')
 const account_strategy = require('./api/account/strategies')
 const authorize_strategy = require('./api/middleware/authorization/strategy')
+const role_router = require('./api/role')
 
 app.use(express.urlencoded(config.urlencode))
 app.use(express.json())
@@ -28,6 +29,8 @@ db.on('error', (err) => {
 })// console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('connected')
+
+
 });
 
 /**
@@ -44,5 +47,6 @@ passport.use('bearer', authorize_strategy.BearerStrategy)
  */
 app.use('/api/hymns', hymn_router)
 app.use('/api/account', account_router)
+app.use('/api/role', role_router)
 
 module.exports = app

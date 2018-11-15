@@ -10,6 +10,58 @@ const DecryptData = require('./encrypt_decrypt').DecryptData
  * @since 27-08-18
  */
 
+ exports.GetHymn = (req, res) => {
+     HymnService.GetHymn(req.query.id).then (result => {
+        if (result) {
+            res.send(result)
+        } else {
+           res.status(404).end()    // end the request flow
+        }
+
+     }).catch (err => {
+         res.send(err)//status(500).end()
+     })
+ }
+
+exports.GetHymns = (req, res, next ) => {
+    var pageNumber = parseInt(req.query.page)
+    var amount = req.query.amount
+
+    /*
+    * Need to check first if the parameters passed for this endpoint are actually for this endpoints
+    * This is because GetHymns and GetHymn both share the same endpoint. The value of paramaters 
+    * will determined which one is called
+    */
+    if (!amount && !pageNumber)
+        next() // will eventually call the GetHymn since I call GetHymn straight after GetHymns in my hymn index file
+
+    HymnService.GetNumberOfHymns().then( itemCount => {
+        if (itemCount) {
+            HymnService.GetHymns(pageNumber, !amount ? 5 : parseInt(amount)).then (result => {
+                if (result) {
+                    res.send({
+                        result: result,
+                        amount: itemCount
+                    })
+                } else {
+                    res.status(404).end()
+                }
+            }).catch( err => {
+                res.send(err)
+            })
+        } else {
+            res.send({
+                result: [],
+                amount: itemCount
+            })
+        }
+
+    }).catch (err => {
+    })
+
+    
+}
+
 /**
  * Find the hymn based on the hymn number given
  */
@@ -101,7 +153,6 @@ exports.EditHymn = (req, res, next) => {
 
     // data is encrypted
     //var decryptedData = JSON.parse(DecryptData(req.body.data))
-
     HymnService.EditHymn(req.body).then(result => {
         res.status(200).send(result)
     }).catch(err => {

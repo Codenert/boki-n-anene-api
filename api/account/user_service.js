@@ -27,7 +27,7 @@ exports.CreateUser = (username, password, email, role) => {
         _id: new mongoose.Types.ObjectId,
         username: username,
         password: password,
-        _role: role,
+        role: role,
         email: email
     })  
 

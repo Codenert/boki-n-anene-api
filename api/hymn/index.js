@@ -15,6 +15,11 @@ const MongoErrorHandler = require('../error/mongo_error').MongoErrorHandler
  * @since 27-08-18
  */
 
+
+router.get("", Authorize({Roles: "*"}), HymnController.GetHymns)
+
+router.get("",Authorize({Roles:"*"}), HymnController.GetHymn)
+
 router.get("/word", HymnController.FindHymnByWord)
 
 /**
