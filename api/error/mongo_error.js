@@ -18,7 +18,7 @@ exports.MongoErrorHandler = (err, req, res, next) => {
 
         // if error comes from the hymn
         if (err.host === 'hymn') {
-            res.status(400).send(property + " '" + value + "' is already exist")
+            res.status(400).send(property + " '" + value + "' already exists")
         } else {
             res.status(400).send(property + " '" + value + "' is already taken")
         }
