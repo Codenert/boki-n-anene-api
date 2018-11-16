@@ -25,4 +25,8 @@ router.post('/login', AccountController.Login)
  */
 router.post('/register', Authorize({Roles: 'admin'}), AccountController.RegisterUser, MongoErrorHandler)
 
+router.get('/users',AccountController.Users)
+
+router.post('/verify', AccountController.VerifyCode)
+
 module.exports = router
