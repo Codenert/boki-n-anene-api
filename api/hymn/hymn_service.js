@@ -35,6 +35,23 @@ function FindHymnByWord( word ) {
 }
 
 /**
+ * Get hymns with limit amount depend of the value of amount parameter
+ * @param { page number } page 
+ * @param { amount of data to return } amount 
+ */
+function GetHymns( page, amount ) {
+    return HymnModel.find().sort({hymn_number: 'asc'}).skip(page*amount - amount).limit(amount).exec()
+}
+
+function GetHymn(id) {
+    return HymnModel.findById(id).exec()
+}
+
+function GetNumberOfHymns() {
+    return HymnModel.count().exec()
+}
+
+/**
  * Add new song
  * @param { verse of the song } verse 
  * @param {hymn number of song } hymn_number 
@@ -71,6 +88,9 @@ function DeleteHymn(id) {
 }
 
 module.exports = {
+    GetHymns,
+    GetHymn,
+    GetNumberOfHymns,
     FindHymnByNumber,
     FindHymnByWord,
     AddHymn,

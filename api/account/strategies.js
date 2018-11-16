@@ -50,7 +50,7 @@ module.exports = Strategies = {
              */
             UserService.FindUser(username).then( user => {
                 if (user) {
-
+                    console.log(user)
                     /**
                      * Compare the hashed password stored in the database
                      * against what the user is providing
@@ -60,17 +60,21 @@ module.exports = Strategies = {
                             return done(err)
                         }
                         if (same) {
+                            return done(null, { id: user._id, email: user.email}, {
+                                statusCode:200
+                            })
+
                             // generate a token
 
                             // get the role
-                            RoleModel.findById(user._role, (err, res) => {
+                            /*RoleModel.findById(user.role, (err, res) => {
                                 if (res) {
                                     var token = jsonWebToken.sign({ id: user.id, role: res.name }, process.env.JWT_SECRET, config.token);
                                     return done(null, token, {
                                         statusCode: 200,
                                     })
                                 }
-                            })
+                            })*/
                         } else {
                             return done(null, null, {
                                 statusCode: 401,
