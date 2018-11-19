@@ -18,6 +18,16 @@ module.exports = {
 
     token: {
         expiresIn: '1d'
+    },
+
+    nodemailer_config: {
+        host: process.env.transportService,
+        port: process.env._port,
+        secure: true,
+        auth: {
+            user: process.env.username,
+            pass: process.env.pass
+        }
     }
 
 }

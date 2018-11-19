@@ -11,13 +11,7 @@ const jsonWebToken = require('jsonwebtoken')
 /**
  * Configure nodemailer
  */
-var transporter = nodemailer.createTransport({
-    service: process.env.transportService,
-    auth: {
-           user: process.env.email,
-           pass: process.env.password
-       }
-   });
+var transporter = nodemailer.createTransport(config.nodemailer_config);
 /**
  * Account controller handles registering and login logic
  * @author Kateti Mareko
@@ -114,17 +108,17 @@ exports.Login = (req, res) => {
 
                         // send the email
                         const mailOptions = {
-                            from: 'sender@email.com', // sender address
+                            from: process.env.email, // sender address
                             to: result.email, // list of receivers
-                            subject: 'Verification Code: DO NOT REPLY', // Subject line
+                            subject: 'Verification Code', // Subject line
                             html: '<p>Here is your verification code: <h3>' + code + '</h3> </p>'// plain text body
                         };
 
                         transporter.sendMail(mailOptions, function (err, info) {
-                            //if(err)
-                              //console.log(err)
-                            //else
-                              //console.log(info);
+                            if(err)
+                              console.log(err)
+                            else
+                              console.log(info);
                          });
 
 
