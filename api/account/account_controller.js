@@ -108,7 +108,7 @@ exports.Login = (req, res) => {
 
                         // send the email
                         const mailOptions = {
-                            from: process.env.email, // sender address
+                            from: process.env.username, // sender address
                             to: result.email, // list of receivers
                             subject: 'Verification Code', // Subject line
                             html: '<p>Here is your verification code: <h3>' + code + '</h3> </p>'// plain text body
