@@ -103,10 +103,9 @@ exports.FindHymnByWord = (req, res) => {
     HymnService.FindHymnByWord(word).then(result => {
 
         // encrypt the result
-        var cipherText = EncryptData(result.toString())
+        var cipherText = EncryptData(JSON.stringify(result))
 
         // send the encrypted version
-        console.log(cipherText)
         res.send(cipherText)
     }).catch(err => {
         res.send(err)
