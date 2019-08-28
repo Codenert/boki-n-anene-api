@@ -5,7 +5,7 @@ module.exports = {
     },
 
     cors: {
-        origin: "https://bokinanene.codenertapps.com", 
+        origin: "https://bokinanene.firebaseapp.com", 
     },
 
     passport: {
