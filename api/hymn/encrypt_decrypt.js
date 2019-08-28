@@ -2,6 +2,7 @@
 'use strict'
 
 const crypto = require('crypto')
+const forge = require('node-forge')
 
 const KEY = process.env.secret      // Secret key for encrypted data
 const KEY_ENCODING = "base64"
@@ -9,7 +10,9 @@ const KEY_ENCODING = "base64"
 const pKey = process.env.pKey       // Private key for encrypting secret key
 const IV_KEY_LENGTH = 16            // Always 16
 const OUTPUT_ENCONDING = 'base64'       
-const AES_ALGORITHM = "aes-256-cbc"  // using 256 bits therefore needs a 32 bytes key size
+const AES_256_ALGORITHM = "aes-256-cbc"  // using 256 bits therefore needs a 32 bytes key size
+const AES_CBC_ALGORITHM = "AES-CBC"
+const AES_256_CBC_ENCRYPTION_API_LEVEL = 26
 
 /**
  * Encrypt and Decrypt the data
@@ -32,7 +35,6 @@ function GetEncodingType(encoded) {
     return 'hex'
 }
 
-
 function DecryptData(data, isLocal) {
 
     // get the information needed
@@ -45,13 +47,11 @@ function DecryptData(data, isLocal) {
         // 1. Decrypt the cipher key
         key = data.split(".")[2]
 
-        console.log(key)
         key = RSAPrivateDecrypt(key, GetEncodingType(key), 'base64')
     } else {
         key = KEY
     }
 
-    console.log(key + " " + KEY)
 
     // 2. Decrypt the message with derypted cipher key
     var decryptedData = AESDecrypt(ciphertext, 'base64', iv, ivEncoding, key, 'base64')
@@ -60,23 +60,49 @@ function DecryptData(data, isLocal) {
     return decryptedData
 }
 
-
 /**
  * Encrypt the data
  * @param { data to be encrypted } data 
  * @param {*} locally 
  * @returns cipher text
  */
-function EncryptData(data, locally) {
-
+function EncryptData(data, locally, api) {
     // 1. Perform AES encryption on a data with a shared secret
-    var cipherText = AESEncrypt(KEY, KEY_ENCODING, data, 'base64', OUTPUT_ENCONDING)
+    //var cipherText = AESEncrypt(KEY, KEY_ENCODING, data, 'base64', OUTPUT_ENCONDING)
+    var cipherText = ""
+    // computes a random iv key
+    const iv = crypto.randomBytes(IV_KEY_LENGTH)
+    var keyInBufferFormat = Buffer.from(KEY, KEY_ENCODING)
+
+    if (api < AES_256_CBC_ENCRYPTION_API_LEVEL) {
+
+        /**
+         * Perform aes cbc encryption using enc key
+         */
+        var cipher = forge.cipher.createCipher(AES_CBC_ALGORITHM, keyInBufferFormat.toString('binary'))
+        cipher.start({
+            iv: iv.toString('binary'),    // binary string format required by forge
+        })
+        cipher.update(forge.util.createBuffer(data, 'utf8'));
+        cipher.finish()
+        cipherText = Buffer.from(forge.util.hexToBytes(cipher.output.toHex()), 'binary').toString(OUTPUT_ENCONDING); 
+
+    } else {
+
+        const cipher = crypto.createCipheriv(AES_256_ALGORITHM, keyInBufferFormat, iv)
+
+        var dataEncoding = 'utf8'
+        var textInCipher = Buffer.concat([cipher.update(data, dataEncoding), cipher.final()]);
+
+        cipherText = textInCipher.toString(OUTPUT_ENCONDING);
+
+    }
 
     // 2. Encrypt the secret key
     if (!locally) {
         var cipherSecretKey = RSAPrivateEncrypt(KEY, KEY_ENCODING, OUTPUT_ENCONDING)
         return {
-            data: `${cipherText}.${cipherSecretKey}` 
+            data: `${iv.toString(OUTPUT_ENCONDING)}.${cipherText}.${cipherSecretKey}` 
         }
     } else {
         return cipherText
@@ -134,8 +160,9 @@ function AESEncrypt(key, keyencoding, data, ivEncoding, ciphertextencoding) {
  * @param {type of encoding of a data} encoding 
  */
 function RSAPrivateDecrypt(data, encoding, outputEncoding) {
+
     var dataToDecrypt = Buffer.from(data, encoding)
-    console.log('hd')
+
     var decrypted = crypto.privateDecrypt({
         key: pKey
     }, dataToDecrypt).toString(outputEncoding)
@@ -156,7 +183,8 @@ function RSAPrivateEncrypt(secretKey, secretKeyEncoding, outputEncoding) {
     var dataToEncrypted = Buffer.from(secretKey, secretKeyEncoding)
 
     var encrypted = crypto.privateEncrypt({
-        key: pKey
+        key: pKey,
+        passphrase: process.env.pass
     }, dataToEncrypted).toString(outputEncoding)
 
     return encrypted

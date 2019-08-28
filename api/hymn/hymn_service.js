@@ -16,9 +16,7 @@ var HymnModel = require('../model/hymn_model')
   * @param { The hymn number of the song } hymn_number 
   */
 function FindHymnByNumber( number ) {
-
     return HymnModel.findOne( { hymn_number: number } ).exec()
-
 }
 
 /**
@@ -27,7 +25,6 @@ function FindHymnByNumber( number ) {
   * @returns promise object
   */
 function FindHymnByWord( word ) {
-
     return HymnModel.find( { $text: { $search: "\"" + word + "\"", $caseSensitive: false } } ).sort(
         { hymn_number: "asc" }
     ).exec();
@@ -58,14 +55,12 @@ function GetNumberOfHymns() {
  * @returns promise
  */
 function AddHymn(verse, hymn_number) {
-    console.log(verse)
     return new HymnModel({
         _id: new mongoose.Types.ObjectId,
         verse: verse,
         hymn_number: hymn_number,
         _updated_at: new Date()
     }).save()
-
 }
 
 /**
@@ -74,9 +69,14 @@ function AddHymn(verse, hymn_number) {
  */
 function EditHymn(hymn) {
     hymn._updated_at = new Date()   // change the update at property value to the date when the modification happen
-    return HymnModel.findByIdAndUpdate(hymn._id, hymn, {
+    return HymnModel.findOneAndUpdate({
+        hymn_number: hymn.hymn_number
+    }, hymn, {
+        new: true
+    }).exec();
+    /*return HymnModel.findByIdAndUpdate(hymn._id, hymn, {
         new: true   // additional option 
-    }).exec()
+    }).exec()*/
 }
 
 /**

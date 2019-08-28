@@ -2,14 +2,13 @@
 
 const HymnService = require('./hymn_service')
 const EncryptData = require('./encrypt_decrypt').EncryptData
-const DecryptData = require('./encrypt_decrypt').DecryptData
 
 /**
  * Hymn controller to handle hymn operation such as edit, add, find and delete
  * @author Kateti Mareko
  * @since 27-08-18
  */
-
+/*
  exports.GetHymn = (req, res) => {
      HymnService.GetHymn(req.query.id).then (result => {
         if (result) {
@@ -31,7 +30,7 @@ exports.GetHymns = (req, res, next ) => {
     * Need to check first if the parameters passed for this endpoint are actually for this endpoints
     * This is because GetHymns and GetHymn both share the same endpoint. The value of paramaters 
     * will determined which one is called
-    */
+    *
     if (!amount && !pageNumber)
         next() // will eventually call the GetHymn since I call GetHymn straight after GetHymns in my hymn index file
 
@@ -60,25 +59,27 @@ exports.GetHymns = (req, res, next ) => {
     })
 
     
-}
+}*/
 
 /**
  * Find the hymn based on the hymn number given
  */
 exports.FindHymnByNumber = (req, res) => {
+
     var hymnNumber = req.query.hymn_number
+    var api = req.query.api
+
     HymnService.FindHymnByNumber(hymnNumber).then(result => {
         if (result) {
             try {
                 //result.verse = DecryptData(result.verse, true)
                 //var jsonString = JSON.stringify(result)
-                //console.log(jsonString)
 
                 /**
                  * Encrypt the data
                  * since result is in json format object hence need to convert first to a string
                  */
-                var data = EncryptData(JSON.stringify(result), false)
+                var data = EncryptData(JSON.stringify(result), false, api)
                 res.send(data)
             } catch (exception) {
                 res.status(500).send(exception)
@@ -116,33 +117,22 @@ exports.FindHymnByWord = (req, res) => {
  * Add the hymn
  */
 exports.AddHymn = (req, res, next) => {
-    // decrypt the data
-    /*var decryptedData = ""
-
-    var cipherText = ""
-    try {
-        decryptedData = JSON.parse(DecryptData(req.body.data,false))
-        console.log(decryptedData)
-        cipherText = EncryptData(decryptedData.verse, true)
-    } catch (exception) {
-        console.log(exception)
-        res.status(500).send()
-        return
-    }*/
-
     
     var verse = req.body.verse
     var hymn_number = req.body.hymn_number
+
+    if (!verse || !hymn_number) {
+        res.status(400).send('Hymn number or the song verse required.');
+    }
+
     HymnService.AddHymn(verse, hymn_number).then(result => {
         if (result) {
             res.status(201).send(result)
         }
     }).catch(err => {
-        console.log(err)
         err.host = 'hymn'
         next(err)
     })
-
 }
 
 /**
@@ -150,14 +140,15 @@ exports.AddHymn = (req, res, next) => {
  */
 exports.EditHymn = (req, res, next) => {
 
-    // data is encrypted
-    //var decryptedData = JSON.parse(DecryptData(req.body.data))
     HymnService.EditHymn(req.body).then(result => {
-        res.status(200).send(result)
+        if (result) {
+            res.status(200).send(result)
+        } else {
+            res.status(404).send();
+        }
     }).catch(err => {
         res.status(500).end()
     })
-
 }
 
 /**

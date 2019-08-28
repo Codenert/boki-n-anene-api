@@ -1,32 +1,9 @@
 'use strict'
 
+const express = require('express');
+const router = express.Router();
+const accountController = require('./account_controller');
 
-const router = require('express').Router()
-const AccountController = require('./account_controller')
-const MongoErrorHandler = require('../error/mongo_error').MongoErrorHandler
-const Authorize = require('../middleware/authorization/authorize').Authorize
+router.get('/verify', accountController.verifyUser);
 
-/**
- * A routing middleware for account endpoint
- * @author Kateti Mareko
- * @since 27-08-18
- */
-
- /**
-  * POST
-  * Login enpoints
-  */
-router.post('/login', AccountController.Login)
-
-/**
- * POST
- * Adding a new user endpoint
- * This endpoint is restricted i.e. only the admin user can perform this operation
- */
-router.post('/register', Authorize({Roles: 'admin'}), AccountController.RegisterUser, MongoErrorHandler)
-
-router.get('/users',AccountController.Users)
-
-router.post('/verify', AccountController.VerifyCode)
-
-module.exports = router
+module.exports = router;

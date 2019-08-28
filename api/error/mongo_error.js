@@ -6,7 +6,6 @@
  * @since 27-08-18
  */
 exports.MongoErrorHandler = (err, req, res, next) => {
-    console.log('error')
     // find information about the err
     if (err.code === 11000) {         // uniqueness failed error
         var temp = err.errmsg.split(':')
@@ -24,7 +23,6 @@ exports.MongoErrorHandler = (err, req, res, next) => {
         }
     } else {  
         
-       // console.log(err.path)
        /*var errInArray = JSON.stringify(err.errors).split(':')
         //res.status(400).send((errInArray[3].split(','))[0])
         if (err.name == 'ValidationError') {                 // required error {

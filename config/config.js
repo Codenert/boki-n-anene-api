@@ -5,7 +5,7 @@ module.exports = {
     },
 
     cors: {
-        origin: "https://bokinanene.codenertapps.com"
+        origin: "http://localhost:5000" //"https://bokinanene.codenertapps.com", 
     },
 
     passport: {

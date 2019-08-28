@@ -1,13 +1,10 @@
 'use strict'
 
-const express = require('express')
-const router = express.Router()
-const HymnController = require('./hymn_controller')
-const Authorize = require('../middleware/authorization/authorize').Authorize
+const express = require('express');
+const router = express.Router();
+const HymnController = require('./hymn_controller');
+const Authorization = require('../middleware/authorization');
 const MongoErrorHandler = require('../error/mongo_error').MongoErrorHandler
-
-//router.get("/number", api_key_authorizer, HymnController.FindHymnByNumber)
-//router.get("/word", api_key_authorizer, HymnController.FindHymnByWord)
 
 /**
  * Hymn routing endpoints
@@ -15,32 +12,35 @@ const MongoErrorHandler = require('../error/mongo_error').MongoErrorHandler
  * @since 27-08-18
  */
 
+router.get("/word", Authorization.verifyUser, HymnController.FindHymnByWord)
 
-router.get("", Authorize({Roles: "*"}), HymnController.GetHymns)
-
-router.get("",Authorize({Roles:"*"}), HymnController.GetHymn)
-
-router.get("/word", HymnController.FindHymnByWord)
-
-/**
- * GET
- * This endpoint requires the user to be an admin
- */
-router.get("/number", HymnController.FindHymnByNumber)
+router.get("/number", Authorization.verifyUser, HymnController.FindHymnByNumber)
 
 /**
  * PUT
  * This is anonymous endpoint i.e. every user in the system can perform this operation
  */
-router.put("", Authorize({Roles: "*"}), HymnController.EditHymn)
+router.post("", (req, res, next) => {
+    req.requiredPrivilege = true;
+    next();
+}, Authorization.verifyUser, HymnController.AddHymn, MongoErrorHandler)
 
-// This endpoint is authorized by all user
-router.post("", Authorize({Roles: "*"}), HymnController.AddHymn, MongoErrorHandler)
+/**
+ * PUT
+ * This is anonymous endpoint i.e. every user in the system can perform this operation
+ */
+router.put("", (req, res, next) => {
+    req.requiredPrivilege = true;
+    next();
+}, Authorization.verifyUser, HymnController.EditHymn)
 
 /**
  * DELETE
  * Delete the hymn
  */
-router.delete("/:id", Authorize({Roles: "admin"}), HymnController.DeleteHymn)
+router.delete("/:id", (req, res, next) => {
+    req.requireAdmin = true;
+    next();
+}, Authorization.verifyUser, HymnController.DeleteHymn)
 
 module.exports = router
