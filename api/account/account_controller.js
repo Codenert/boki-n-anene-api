@@ -22,7 +22,7 @@ exports.verifyUser = (req, res, next) => {
         } else {*/
             res.cookie('bokinanene-pub', new Buffer(process.env.pub,'utf8').toString('base64'), 
                 { 
-                    //domain: process.env.domain,
+                    domain: process.env.domain,
                     secure: true,
                     httpOnly: true,
                 })
