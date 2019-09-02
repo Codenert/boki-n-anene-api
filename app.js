@@ -1,5 +1,6 @@
 'use strict'
 const express = require('express')
+var cookieParser = require('cookie-parser')
 const app = express()
 const HymnRouter = require('./api/hymn')
 const AccountRouter = require('./api/account')
@@ -9,6 +10,7 @@ const helmet = require('helmet')
 const cors = require('cors')
 
 app.use(express.urlencoded(config.urlencode))
+app.use(cookieParser());
 app.use(express.json())
 app.use(helmet())
 

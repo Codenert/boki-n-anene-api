@@ -35,26 +35,35 @@ function GetEncodingType(encoded) {
     return 'hex'
 }
 
-function DecryptData(data, isLocal) {
+function DecryptData(data, pubKey) {
 
     // get the information needed
     let iv = data.split(".")[0]
-    var ivEncoding = GetEncodingType(iv)
+    //var ivEncoding = GetEncodingType(iv)
     let ciphertext = data.split(".")[1]
-    let key = ""
+    let key = data.split(".")[2];
 
-    if (!isLocal) {
+    var dataToDecrypt = Buffer.from(key, 'base64')
+
+    var decryptedKey = crypto.publicDecrypt({
+        key: Buffer.from(pubKey,'base64').toString('utf8')
+    }, dataToDecrypt).toString('base64')
+
+    /*if (!isLocal) {
         // 1. Decrypt the cipher key
         key = data.split(".")[2]
 
         key = RSAPrivateDecrypt(key, GetEncodingType(key), 'base64')
     } else {
         key = KEY
-    }
+    }*/
 
 
     // 2. Decrypt the message with derypted cipher key
-    var decryptedData = AESDecrypt(ciphertext, 'base64', iv, ivEncoding, key, 'base64')
+    
+
+
+    var decryptedData = AESDecrypt(ciphertext, 'base64', iv, 'base64', decryptedKey, 'base64')
 
     // 3. Return the decrypted data
     return decryptedData
@@ -112,7 +121,7 @@ function EncryptData(data, locally, api) {
 
 function AESDecrypt (ciphertext, ciphertextencoding, iv, ivEncoding, key, keyEncoding) {
 
-    let decipher = crypto.createDecipheriv(AES_ALGORITHM, Buffer.from(key, keyEncoding), Buffer.from(iv, ivEncoding))
+    let decipher = crypto.createDecipheriv(AES_256_ALGORITHM, Buffer.from(key, keyEncoding), Buffer.from(iv, ivEncoding))
 
     let decrypted = decipher.update(ciphertext, ciphertextencoding, 'utf8')
 

@@ -2,6 +2,8 @@
 
 const HymnService = require('./hymn_service')
 const EncryptData = require('./encrypt_decrypt').EncryptData
+const DecryptData = require('./encrypt_decrypt').DecryptData
+
 
 /**
  * Hymn controller to handle hymn operation such as edit, add, find and delete
@@ -79,9 +81,21 @@ exports.FindHymnByNumber = (req, res) => {
                  * Encrypt the data
                  * since result is in json format object hence need to convert first to a string
                  */
-                var data = EncryptData(JSON.stringify(result), false, api)
-                res.send(data)
+                var data = EncryptData(JSON.stringify(result), false, api);
+
+                /**
+                 * Check if the req contains a cookie
+                 */
+                if (req.headers.cookie) {
+                    var pub = req.headers.cookie.split("=")[1];
+                    if (pub) {
+                        res.send(JSON.parse(DecryptData(data.data, pub)))
+                    }
+                } else {
+                    res.send(data)
+                }
             } catch (exception) {
+                console.log(exception)
                 res.status(500).send(exception)
             }
         } else {
