@@ -2,6 +2,11 @@
 
 const AccountService = require('./account_service');
 
+exports.endUserSession = (req, res, next) => {
+    res.clearCookie('bokinanene-pub');
+    res.send();
+}
+
 exports.verifyUser = (req, res, next) => {
 
     var tokenToVerify = req.headers.user_auth_token;
@@ -22,6 +27,7 @@ exports.verifyUser = (req, res, next) => {
         } else {*/
             res.cookie('bokinanene-pub', new Buffer(process.env.pub,'utf8').toString('base64'), 
                 { 
+                    //domain: 'bokinanene.firebaseapp.com',
                     secure: true,
                     httpOnly: true,
                 })
