@@ -74,27 +74,26 @@ exports.FindHymnByNumber = (req, res) => {
 
         if (result) {
             try {
+                
                 /**
                  * Encrypt the data
                  * since result is in json format object hence need to convert first to a string
                  */
                 var data = EncryptData(JSON.stringify(result), false, api);
 
-                var d = req.headers.cookie.split('; ');
-                if (d.length == 1) {
-                    res.status(401).send();
-                    return;
-                } else if (d.length == 0) {
-                    res.send(data)
+                /**
+                 * Check if the req contains a cookie
+                 */
+                if (req.headers.cookie) {
+                    var pub = req.headers.cookie.split("=")[1];
+                    if (pub) {
+                        res.send(JSON.parse(DecryptData(data.data, pub)))
+                    }
                 } else {
-                    var sessionId = d[1].split("=")[1];
-                    var pub = d[0].split("=")[1];
-                    res.send(JSON.parse(DecryptData(data.data, pub)))
+                    res.send(data)
                 }
-
             } catch (exception) {
-                console.log(exception)
-                res.send(exception)
+                res.status(500).send()
             }
         } else {
             res.status(404).send()
