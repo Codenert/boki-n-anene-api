@@ -13,7 +13,6 @@ exports.verifyUser = (req, res, next) => {
     AccountService.verifyUser(tokenToVerify).then (info => {
             res.cookie('bokinanene-pub', new Buffer(process.env.pub,'utf8').toString('base64'), 
                 { 
-                    domain: 'bokinanene.firebaseapp.com',
                     secure: true,
                     httpOnly: true,
                 })
