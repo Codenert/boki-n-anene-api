@@ -1,6 +1,7 @@
 'use strict'
 
 const AccountService = require('./account_service');
+const crypto = require('crypto');
 
 exports.endUserSession = (req, res, next) => {
     res.clearCookie('bokinanene-pub');
@@ -26,6 +27,13 @@ exports.verifyUser = (req, res, next) => {
             }
         } else {*/
             res.cookie('bokinanene-pub', new Buffer(process.env.pub,'utf8').toString('base64'), 
+                { 
+                    //domain: 'bokinanene.firebaseapp.com',
+                    secure: true,
+                    sameSite: 'strict',
+                    httpOnly: true,
+                })
+                res.cookie('sessionId', crypto.randomBytes(32).toString('base64'), 
                 { 
                     //domain: 'bokinanene.firebaseapp.com',
                     secure: true,

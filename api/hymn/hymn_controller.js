@@ -62,38 +62,36 @@ exports.GetHymns = (req, res, next ) => {
 
     
 }*/
-
 /**
  * Find the hymn based on the hymn number given
  */
 exports.FindHymnByNumber = (req, res) => {
-
     var hymnNumber = req.query.hymn_number
     var api = req.query.api
 
     HymnService.FindHymnByNumber(hymnNumber).then(result => {
+        
+
         if (result) {
             try {
-                //result.verse = DecryptData(result.verse, true)
-                //var jsonString = JSON.stringify(result)
-
                 /**
                  * Encrypt the data
                  * since result is in json format object hence need to convert first to a string
                  */
                 var data = EncryptData(JSON.stringify(result), false, api);
 
-                /**
-                 * Check if the req contains a cookie
-                 */
-                if (req.headers.cookie) {
-                    var pub = req.headers.cookie.split("=")[1];
-                    if (pub) {
-                        res.send(JSON.parse(DecryptData(data.data, pub)))
-                    }
-                } else {
+                var d = req.headers.cookie.split('; ');
+                if (d.length == 1) {
+                    res.status(401).send();
+                    return;
+                } else if (d.length == 0) {
                     res.send(data)
+                } else {
+                    var sessionId = d[1].split("=")[1];
+                    var pub = d[0].split("=")[1];
+                    res.send(JSON.parse(DecryptData(data.data, pub)))
                 }
+
             } catch (exception) {
                 console.log(exception)
                 res.status(500).send(exception)
@@ -115,13 +113,18 @@ exports.FindHymnByNumber = (req, res) => {
  */
 exports.FindHymnByWord = (req, res) => {
     var word = req.query.search_word
+    var api = req.query.api
     HymnService.FindHymnByWord(word).then(result => {
 
-        // encrypt the result
-        var cipherText = EncryptData(JSON.stringify(result))
+        if (result) {
+            // encrypt the result
+            var cipherText = EncryptData(JSON.stringify(result), false, api);
 
-        // send the encrypted version
-        res.send(cipherText)
+            // send the encrypted version
+            res.send(cipherText)
+        } else {
+            res.status(404).send()
+        }
     }).catch(err => {
         res.send(err)
     })
