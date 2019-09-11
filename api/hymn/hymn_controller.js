@@ -94,7 +94,7 @@ exports.FindHymnByNumber = (req, res) => {
 
             } catch (exception) {
                 console.log(exception)
-                res.status(500).send(exception)
+                res.send(exception)
             }
         } else {
             res.status(404).send()
