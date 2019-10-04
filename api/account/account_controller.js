@@ -14,7 +14,7 @@ exports.verifyUser = (req, res, next) => {
             res.cookie('bokinanene-pub', new Buffer(process.env.pub,'utf8').toString('base64'), 
                 { 
                     domain: "bokinanene.firebaseapp.com",
-                    sameSite: true,
+                    //sameSite: true,
                     secure: true,
                     httpOnly: true,
                 })
