@@ -8,7 +8,6 @@ exports.endUserSession = (req, res, next) => {
 }
 
 exports.verifyUser = (req, res, next) => {
-
     var tokenToVerify = req.headers.user_auth_token;
     AccountService.verifyUser(tokenToVerify).then (info => {
             res.cookie('bokinanene-pub', new Buffer(process.env.pub,'utf8').toString('base64'), 

@@ -5,7 +5,7 @@ module.exports = {
     },
 
     cors: {
-        origin: "https://bokinanene.firebaseapp.com", 
+        origin: "https://bokinanene.codenertapps.com", 
         credentials: true
     },
 
