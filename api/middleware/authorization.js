@@ -8,6 +8,7 @@ exports.verifyUser = (req, res, next) => {
     } else {
 
         var token = req.headers.authorization.split(" ")[1];
+
         AccountService.verifyUser(token).then(() => {
             next()
         }).catch(err => {

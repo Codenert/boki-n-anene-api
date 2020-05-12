@@ -5,7 +5,7 @@ module.exports = {
     },
 
     cors: {
-        origin: "https://bokinanene.codenertapps.com", 
+        origin: "http://localhost:8080",//"https://bokinanene.codenertapps.com", 
         credentials: true
     },
 

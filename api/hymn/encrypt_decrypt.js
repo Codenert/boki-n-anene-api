@@ -76,6 +76,7 @@ function DecryptData(data, pubKey) {
  * @returns cipher text
  */
 function EncryptData(data, locally, api) {
+
     // 1. Perform AES encryption on a data with a shared secret
     //var cipherText = AESEncrypt(KEY, KEY_ENCODING, data, 'base64', OUTPUT_ENCONDING)
     var cipherText = ""

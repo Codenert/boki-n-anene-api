@@ -1,5 +1,6 @@
 'use strict'
 const express = require('express')
+require('dotenv').config()
 var cookieParser = require('cookie-parser')
 const app = express()
 const HymnRouter = require('./api/hymn')

@@ -13,8 +13,10 @@ const MongoErrorHandler = require('../error/mongo_error').MongoErrorHandler
  */
 
 router.get("/word", Authorization.verifyUser, HymnController.FindHymnByWord)
-
 router.get("/number", Authorization.verifyUser, HymnController.FindHymnByNumber)
+
+router.get("/v2.0/number", Authorization.verifyUser, require('./v2.0/hymn_controller').FindHymnByNumber)
+router.get("/v2.0/word", Authorization.verifyUser, require('./v2.0/hymn_controller').FindHymnByWord)
 
 /**
  * PUT

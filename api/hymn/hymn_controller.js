@@ -71,7 +71,6 @@ exports.FindHymnByNumber = (req, res) => {
 
     HymnService.FindHymnByNumber(hymnNumber).then(result => {
         
-
         if (result) {
             try {
                 
