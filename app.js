@@ -15,7 +15,7 @@ app.use(cookieParser());
 app.use(express.json())
 app.use(helmet())
 
-app.use(cors(config.cors))
+app.use(cors())
 
 /**
  * Setup mongoose db to connect to this api 

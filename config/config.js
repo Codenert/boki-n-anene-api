@@ -4,10 +4,10 @@ module.exports = {
         connectionString: process.env.DATABASE_CONNECTION_STRING
     },
 
-    cors: {
+    /*cors: {
         origin: "http://localhost:8080",//"https://bokinanene.codenertapps.com", 
         credentials: true
-    },
+    },*/
 
     passport: {
         passReqToCallback: true
