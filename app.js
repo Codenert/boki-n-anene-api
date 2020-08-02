@@ -1,4 +1,5 @@
 'use strict'
+require('dotenv').config()
 const express = require('express')
 require('dotenv').config()
 var cookieParser = require('cookie-parser')
@@ -15,21 +16,23 @@ app.use(cookieParser());
 app.use(express.json())
 app.use(helmet())
 
-app.use(cors())
+app.use(cors(config.cors))
 
 /**
  * Setup mongoose db to connect to this api 
  */
 mongoose.connect(config.database.connectionString, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 })
 
 
 var db = mongoose.connection;
 db.on('error', (err) => {
+    console.log('error: ', err)
 })// console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-
+    console.log('connected')
 
 });
 
