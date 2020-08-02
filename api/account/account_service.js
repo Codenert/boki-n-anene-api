@@ -9,6 +9,7 @@ exports.verifyUser = (token) => {
 
             const header = JSON.parse(Buffer.from(header64, 'base64').toString('ascii'));
 
+
             var options = {
                 algorithms: ['RS256'],
                 audience: process.env.projectId,
@@ -23,6 +24,8 @@ exports.verifyUser = (token) => {
                     });
                 }
                 if (err) {
+            console.log(err)
+
                     reject({
                         status: 401,
                     });
