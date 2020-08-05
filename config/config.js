@@ -1,6 +1,4 @@
-var allowedOrigins = ['https://bokinanene.codenertapps.com',
-                      'http://192.168.20.4:8080',
-                      'http://localhost:8080'];
+var allowedOrigins = ['https://dashboard.bokinanene.com'];
 
 module.exports = {
 
